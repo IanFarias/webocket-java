@@ -6,9 +6,12 @@ import java.net.UnknownHostException;
 public class Main {
     public static void main(String args[]) {
         Socket websocket = null;
-
         try {
-            websocket = new Socket("localhost", 6789);
+            if(args.length > 0){
+                websocket = new Socket(args[0], Integer.parseInt(args[1]));
+            }else{
+                websocket = new Socket("localhost", 6789);
+            }
 
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             DataInputStream entrada = new DataInputStream(websocket.getInputStream());

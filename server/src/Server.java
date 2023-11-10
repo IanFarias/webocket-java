@@ -16,11 +16,8 @@ public class Server {
             System.out.println("*** Porta de escuta (listen): " + port);
 
             while (true) {
-                // accept bloqueia ateh que chegue um pedido de conexao de um cliente
                 Socket client = serverSocket.accept();
-
                 System.out.println("*** conexao aceita de (remoto): " + client.getRemoteSocketAddress());
-                // quando chega, cria nova thread para atender em especial o cliente
                 Connection c = new Connection(client);
             }
         } catch (IOException e) {

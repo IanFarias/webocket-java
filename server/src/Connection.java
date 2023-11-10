@@ -22,33 +22,32 @@ class Connection extends Thread {
 
     public void run() {
         try {
-            String response = "";
-            Game game = null;
-            do {
+            String response;
+            Game game;
 
+            do {
                 response = input.readUTF().toUpperCase().trim();
 
                 if(response.equals("JOGAR")) {
-
                     game = new Game();
                     game.selectRandomWord();
 
-                    output.writeUTF(game.getHiddenWord());
-                }else if(game != null) {
-                    if(game.verifyEndGame(response)) {
-                        if(game.isVictory()) {
-                            output.writeUTF("Você Ganhou!! A palavra era: " + game.getWord());
-                        }
+                    do{
+                        output.writeUTF("Letras testadas: " + game.getWrongGuesses()
+                                + "\nChances: " + game.getChances()
+                                + "\nPalavra: " + game.getHiddenWord());
+
+                        response = input.readUTF().toUpperCase().trim();
+                    }while (!game.verifyEndGame(response));
+
+                    output.writeUTF("END");
+
+                    if(game.isVictory()) {
+                        output.writeUTF("Você Ganhou!! A palavra era: " + game.getWord());
+                    }else {
                         output.writeUTF("Você Perdeu!! A palavra era: " + game.getWord());
-                        output.writeUTF("END");
-                        break;
                     }
-
-                    output.writeUTF("Letras testadas: " + game.getWrongGuesses()
-                            + "\nChances: " + game.getChances()
-                            + "\nPalavra: " + game.getHiddenWord());
                 }
-
             }while (!response.equals("SAIR"));
         } catch (EOFException e) {
             System.out.println("Conexao: EOFException " + e.getMessage());

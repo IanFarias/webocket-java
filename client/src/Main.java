@@ -8,7 +8,7 @@ public class Main {
         Socket websocket = null;
 
         try {
-            websocket = new Socket("localhost", 6789); // conecta o socket aa porta remota
+            websocket = new Socket("localhost", 6789);
 
             BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
             DataInputStream entrada = new DataInputStream(websocket.getInputStream());
@@ -24,30 +24,36 @@ public class Main {
                 userInput = console.readLine();
 
                 switch (userInput){
-                     case "1":
-                         saida.writeUTF("jogar");
-                         String response;
+                    case "1":
+                        saida.writeUTF("jogar");
+                        String response = "";
 
-                         do {
-                             response = entrada.readUTF();
-                             System.out.println(response);
+                        while(true) {
+                            response = entrada.readUTF();
 
-                             System.out.println("Digite: ");
-                             userInput = console.readLine();
-                             saida.writeUTF(userInput);
+                            if(response.equals("END")) {
+                                break;
+                            }
 
-                         }while(!response.equals("END"));
+                            System.out.println(response);
 
-                         break;
-                     case "2":
-                         saida.writeUTF("sair");
-                         break;
-                     default:
-                         saida.writeUTF(userInput);
-                         break;
+                            System.out.println("Digite: ");
+                            userInput = console.readLine();
+                            saida.writeUTF(userInput);
+                        }
+
+                        response = entrada.readUTF();
+                        System.out.println(response);
+                        break;
+                    case "2":
+                        saida.writeUTF("sair");
+                        break;
+                    default:
+                        saida.writeUTF(userInput);
+                        break;
                 }
 
-            } while (!userInput.equals("sair"));
+            } while (!userInput.equals("2"));
         } catch (UnknownHostException e) {
             System.out.println("!!! Servidor desconhecido: " + e.getMessage());
         } catch (EOFException e) {

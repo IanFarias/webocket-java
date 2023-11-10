@@ -13,7 +13,7 @@ public class Game {
     private Integer chances;
 
     final List<String> WORDS =
-            new ArrayList<String>(
+            new ArrayList<>(
                     Arrays.asList(
                             "ALGORITMO",
                             "PROGRAMAÇAO",
@@ -29,15 +29,17 @@ public class Game {
                     ));
 
     public Game() {
-        this.wrongGuesses = new ArrayList<String>();
+        this.wrongGuesses = new ArrayList<>();
         this.chances = 6;
     }
 
     public boolean isVictory() {
-     return this.hiddenWord.equals(word);
+        return this.hiddenWord.equals(word) && this.chances > 0;
     }
 
     public boolean verifyEndGame(String guess) {
+        if(this.wrongGuesses.contains(guess)) return false;
+
         if(guess.length() > 1 ) {
             if(guess.equals(this.word)) {
                 setHiddenWord(guess);
@@ -57,14 +59,12 @@ public class Game {
             }
         }
 
-        if(this.word.equals(this.hiddenWord)) return true;
+        if(this.chances <= 0) return true;
 
-        if(this.chances == 0) return true;
-
-        return false;
+        return this.word.equals(this.hiddenWord) ;
     }
 
-    public void createHiddenWord() {
+    private void createHiddenWord() {
         StringBuilder hidden = new StringBuilder();
 
         for (int i = 0; i < word.length(); i++) {
@@ -73,7 +73,7 @@ public class Game {
 
         setHiddenWord(hidden.toString());
     }
-    public void revealCharacters(char ch) {
+    private void revealCharacters(char ch) {
         StringBuilder updatedWord = new StringBuilder(this.getHiddenWord());
         for (int i = 0; i < this.word.length(); i++) {
             if (this.word.charAt(i) == ch) {
